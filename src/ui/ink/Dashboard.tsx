@@ -55,6 +55,7 @@ interface DashboardProps {
   currentResult?: string;
   workingDirectory?: string;
   message?: { type: 'info' | 'success' | 'error'; text: string } | null;
+  showHelp?: boolean;
 }
 
 // ========================================
@@ -228,6 +229,90 @@ const MessagePanel: React.FC<{ message: { type: 'info' | 'success' | 'error'; te
   );
 };
 
+const HelpPanel: React.FC = () => (
+  <Box flexDirection="column" borderStyle="double" borderColor="magenta" paddingX={2} paddingY={1} marginTop={1}>
+    <Text bold color="magenta">AIDOS ヘルプ</Text>
+    <Text color="gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</Text>
+
+    <Box marginTop={1} flexDirection="column">
+      <Text bold color="cyan">基本的な使い方</Text>
+      <Text color="white">  タスクや仕様を入力して Enter を押すと、Claude Code が実行します。</Text>
+      <Text color="white">  複数行のテキストを貼り付けると、マルチラインモードになります。</Text>
+    </Box>
+
+    <Box marginTop={1} flexDirection="column">
+      <Text bold color="cyan">スラッシュコマンド</Text>
+      <Box flexDirection="column" marginLeft={2}>
+        <Box>
+          <Text color="yellow">/help, /h, /?  </Text>
+          <Text color="white">このヘルプを表示/非表示</Text>
+        </Box>
+        <Box>
+          <Text color="yellow">/cd &lt;path&gt;     </Text>
+          <Text color="white">作業ディレクトリを変更 (~, 相対パス対応)</Text>
+        </Box>
+        <Box>
+          <Text color="yellow">/pwd           </Text>
+          <Text color="white">現在の作業ディレクトリを表示</Text>
+        </Box>
+        <Box>
+          <Text color="yellow">/status, /s    </Text>
+          <Text color="white">エージェントの状態を表示</Text>
+        </Box>
+        <Box>
+          <Text color="yellow">/config        </Text>
+          <Text color="white">現在の設定を表示</Text>
+        </Box>
+        <Box>
+          <Text color="yellow">/clear         </Text>
+          <Text color="white">結果と履歴をクリア</Text>
+        </Box>
+        <Box>
+          <Text color="yellow">/about         </Text>
+          <Text color="white">AIDOSについて</Text>
+        </Box>
+      </Box>
+    </Box>
+
+    <Box marginTop={1} flexDirection="column">
+      <Text bold color="cyan">キーボードショートカット</Text>
+      <Box flexDirection="column" marginLeft={2}>
+        <Box>
+          <Text color="yellow">Enter      </Text>
+          <Text color="white">タスクを実行（単一行モード）</Text>
+        </Box>
+        <Box>
+          <Text color="yellow">Ctrl+D     </Text>
+          <Text color="white">タスクを実行（マルチラインモード）</Text>
+        </Box>
+        <Box>
+          <Text color="yellow">Esc        </Text>
+          <Text color="white">入力をキャンセル</Text>
+        </Box>
+        <Box>
+          <Text color="yellow">q          </Text>
+          <Text color="white">AIDOSを終了</Text>
+        </Box>
+      </Box>
+    </Box>
+
+    <Box marginTop={1} flexDirection="column">
+      <Text bold color="cyan">タスク例</Text>
+      <Box flexDirection="column" marginLeft={2}>
+        <Text color="gray">• TypeScriptのエラーを修正して</Text>
+        <Text color="gray">• srcディレクトリの構造を教えて</Text>
+        <Text color="gray">• この関数にユニットテストを追加して</Text>
+        <Text color="gray">• READMEを日本語で書いて</Text>
+      </Box>
+    </Box>
+
+    <Box marginTop={1}>
+      <Text color="gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</Text>
+    </Box>
+    <Text color="gray" dimColor>/help で閉じる</Text>
+  </Box>
+);
+
 const EmptyState: React.FC<{ interactive: boolean }> = ({ interactive }) => (
   <Box
     flexDirection="column"
@@ -264,6 +349,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   currentResult,
   workingDirectory,
   message,
+  showHelp = false,
 }) => {
   const { exit } = useApp();
 
@@ -369,6 +455,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
       {/* Show message */}
       {message && <MessagePanel message={message} />}
 
+      {/* Show help panel */}
+      {showHelp && <HelpPanel />}
+
       <Box marginY={1}>
         {paused && (
           <Box borderStyle="round" borderColor="yellow" paddingX={2}>
@@ -377,9 +466,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
         )}
       </Box>
 
-      {agents.length === 0 ? (
+      {!showHelp && agents.length === 0 ? (
         <EmptyState interactive={interactive} />
-      ) : (
+      ) : !showHelp && (
         agentRows.map((row, idx) => (
           <Box key={idx} flexDirection="row" flexWrap="wrap">
             {row.map((agent) => (

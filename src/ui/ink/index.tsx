@@ -135,6 +135,7 @@ export function startInteractive(options: InteractiveOptions = {}): {
   let currentTaskId: string | null = null;
   let workingDirectory = options.workingDirectory || process.cwd();
   let message: { type: 'info' | 'success' | 'error'; text: string } | null = null;
+  let showHelp = true; // 初回起動時はヘルプを表示
 
   // Clear message after a delay
   const showMessage = (type: 'info' | 'success' | 'error', text: string, duration = 3000) => {
@@ -191,19 +192,39 @@ export function startInteractive(options: InteractiveOptions = {}): {
         break;
 
       case 'help':
+      case 'h':
+      case '?':
+        // ヘルプパネルの表示/非表示を切り替え
+        showHelp = !showHelp;
+        rerenderFn?.();
+        break;
+
+      case 'status':
+      case 's':
+        const activeAgents = currentAgents.filter(a => a.status === 'thinking' || a.status === 'executing');
+        const completedTasks = taskHistory.filter(t => t.status === 'completed').length;
+        const failedTasks = taskHistory.filter(t => t.status === 'failed').length;
         showMessage('info',
-          'コマンド一覧:\n' +
-          '/cd <path>  - 作業ディレクトリ変更\n' +
-          '/pwd        - 現在のディレクトリ表示\n' +
-          '/config     - 設定表示\n' +
-          '/clear      - 履歴クリア\n' +
-          '/help       - このヘルプ',
-          10000
+          `エージェント状態:\n` +
+          `  アクティブ: ${activeAgents.length}個\n` +
+          `  完了タスク: ${completedTasks}件\n` +
+          `  失敗タスク: ${failedTasks}件\n` +
+          `  作業ディレクトリ: ${workingDirectory}`,
+          8000
+        );
+        break;
+
+      case 'about':
+        showMessage('info',
+          'AIDOS - AI-Driven Orchestration System\n' +
+          'Version: 1.0.0\n' +
+          'Claude Code エージェントを使用した自律的開発支援ツール',
+          8000
         );
         break;
 
       default:
-        showMessage('error', `不明なコマンド: /${command} (/help で一覧表示)`);
+        showMessage('error', `不明なコマンド: /${command}\n/help でコマンド一覧を表示`);
     }
   };
 
@@ -363,6 +384,7 @@ export function startInteractive(options: InteractiveOptions = {}): {
         currentResult={currentResult}
         workingDirectory={workingDirectory}
         message={message}
+        showHelp={showHelp}
       />
     );
   };
