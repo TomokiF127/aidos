@@ -1,0 +1,22 @@
+# AIDOS 設定ファイル
+# このファイルをプロジェクトルートに配置
+
+api:
+  provider: anthropic
+  model: claude-sonnet-4-20250514
+  maxTokens: 4096
+
+agents:
+  maxConcurrent: 5
+  timeoutMs: 300000  # 5分
+
+budget:
+  maxTotalTokens: 1000000
+  maxSessionDurationMs: 3600000  # 1時間
+
+output:
+  directory: ./output
+
+ui:
+  theme: dark
+  logLines: 100

@@ -1,0 +1,54 @@
+{
+  "name": "aidos",
+  "version": "0.1.0",
+  "description": "AI-Driven Orchestration System - 自律的AI開発オーケストレーション",
+  "type": "module",
+  "main": "dist/cli.js",
+  "bin": {
+    "aidos": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli.js",
+    "dev": "tsx src/cli.ts",
+    "poc:task": "tsx poc/poc-1-task-decompose.ts",
+    "poc:task:mock": "tsx poc/poc-1-task-decompose-mock.ts",
+    "poc:worker": "tsx poc/poc-2-worker-threads.ts",
+    "poc:ui": "tsx poc/poc-3-blessed-ui.ts",
+    "poc:all": "tsx poc/poc-4-integration.ts",
+    "poc:all:mock": "tsx poc/poc-4-integration-mock.ts",
+    "test": "vitest",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.0",
+    "better-sqlite3": "^11.0.0",
+    "blessed": "^0.1.81",
+    "blessed-contrib": "^4.11.0",
+    "commander": "^12.0.0",
+    "ink": "^6.6.0",
+    "ink-select-input": "^6.2.0",
+    "ink-spinner": "^5.0.0",
+    "ink-text-input": "^6.0.0",
+    "react": "^19.2.3",
+    "uuid": "^10.0.0",
+    "yaml": "^2.4.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/blessed": "^0.1.25",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.2.7",
+    "@types/uuid": "^10.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "author": "AIDOS Team",
+  "license": "UNLICENSED",
+  "private": true
+}
